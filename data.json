@@ -1,0 +1,33 @@
+{
+    "בביצוע": {
+        "icon": ":/Icons/history.svg",
+        "children": [
+            {
+                "פרויקט 1": {
+                    "icon": ":/Icons/perm_data_setting.svg"
+                }
+            }
+        ]
+    },
+    "הסתיים": {
+        "icon": ":/Icons/done_outline.svg",
+        "children": [
+            {
+                "פרויקט ישן": {
+                    "icon": ":/Icons/perm_data_setting.svg"
+                }
+            }
+        ]
+    },
+    "פוטניציאל": {
+        "icon": ":/Icons/pregnant_woman.svg",
+        "children": [
+            {
+                "פרויקט חדש": {
+                    "icon": ":/Icons/perm_data_setting.svg"
+                }
+            }
+        ]
+    },
+    "main dir": "C:\\Users\\Ayelet\\Google Drive\\איילת\\פרוייקטים"
+}
