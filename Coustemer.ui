@@ -61,7 +61,7 @@
         <widget class="QComboBox" name="QCCusType">
          <item>
           <property name="text">
-           <string>פוטנציאל</string>
+           <string>פוטניציאל</string>
           </property>
          </item>
          <item>
@@ -574,9 +574,6 @@
   <tabstop>QBClear</tabstop>
   <tabstop>QBDir</tabstop>
   <tabstop>QBCancle</tabstop>
-  <tabstop>QCType_3</tabstop>
-  <tabstop>QLPhone_number_2</tabstop>
-  <tabstop>QLAddress_2</tabstop>
  </tabstops>
  <resources>
   <include location="Resorces/Icons.qrc"/>

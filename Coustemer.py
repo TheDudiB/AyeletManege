@@ -18,7 +18,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(1163, 427)
+        Form.resize(1163, 428)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -324,6 +324,20 @@ class Ui_Form(object):
 
         self.verticalLayout_15.addLayout(self.horizontalLayout)
 
+        QWidget.setTabOrder(self.QCCusType, self.QCProjType)
+        QWidget.setTabOrder(self.QCProjType, self.QLProject_name)
+        QWidget.setTabOrder(self.QLProject_name, self.QCProject_type)
+        QWidget.setTabOrder(self.QCProject_type, self.QLCoustemer_name)
+        QWidget.setTabOrder(self.QLCoustemer_name, self.QLGush)
+        QWidget.setTabOrder(self.QLGush, self.QLChelca)
+        QWidget.setTabOrder(self.QLChelca, self.QLPhone_number)
+        QWidget.setTabOrder(self.QLPhone_number, self.QLAddress)
+        QWidget.setTabOrder(self.QLAddress, self.QLEmail)
+        QWidget.setTabOrder(self.QLEmail, self.QTAddedInfo)
+        QWidget.setTabOrder(self.QTAddedInfo, self.QBCreate)
+        QWidget.setTabOrder(self.QBCreate, self.QBClear)
+        QWidget.setTabOrder(self.QBClear, self.QBDir)
+        QWidget.setTabOrder(self.QBDir, self.QBCancle)
 
         self.retranslateUi(Form)
 
@@ -333,7 +347,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"\u05d3\u05e3 \u05dc\u05e7\u05d5\u05d7", None))
         self.label_7.setText(QCoreApplication.translate("Form", u"\u05e1\u05d5\u05d2 \u05d4\u05dc\u05e7\u05d5\u05d7", None))
-        self.QCCusType.setItemText(0, QCoreApplication.translate("Form", u"\u05e4\u05d5\u05d8\u05e0\u05e6\u05d9\u05d0\u05dc", None))
+        self.QCCusType.setItemText(0, QCoreApplication.translate("Form", u"\u05e4\u05d5\u05d8\u05e0\u05d9\u05e6\u05d9\u05d0\u05dc", None))
         self.QCCusType.setItemText(1, QCoreApplication.translate("Form", u"\u05d1\u05d1\u05d9\u05e6\u05d5\u05e2", None))
         self.QCCusType.setItemText(2, QCoreApplication.translate("Form", u"\u05d2\u05de\u05d5\u05e8", None))
 

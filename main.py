@@ -2,14 +2,26 @@ import sys
 import codecs
 from os.path import isdir, join, basename
 from json import dump, load
-from PySide2.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QWidget, QMessageBox, QFileDialog, \
-    QLineEdit, QTextEdit, QComboBox
-from PySide2.QtCore import Qt, QSize, Signal, Slot, QModelIndex
-from PySide2.QtGui import QStandardItemModel, QStandardItem, QIcon
+from PySide2.QtWidgets import QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog, \
+    QLineEdit, QTextEdit, QComboBox, QShortcut
+from PySide2.QtCore import Qt, Signal, Slot, QModelIndex
+from PySide2.QtGui import QStandardItemModel, QStandardItem, QIcon, QKeySequence
 from MainWin import Ui_MainWindow
 from Coustemer import Ui_Form
 
 main_json_file = 'data.json'
+
+dic_translator = {'name': 'name',
+                  'client_name': 'Client Name',
+                  'גוש': 'גוש',
+                  'חלקה': 'חלקה',
+                  'phone': 'Phone Number',
+                  'address': 'Address',
+                  'email': 'Email',
+                  'added text': 'Additional Text',
+                  'סוג לקוח': 'Customer Type',
+                  'סוג פרויקט': 'Project Type',
+                  'סוג נכס': 'Project Type'}
 
 
 class MainWindow(QMainWindow):
@@ -20,12 +32,17 @@ class MainWindow(QMainWindow):
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(['מצב'])
         self.customer_widget = None
+        self.previous_dict = []
+        self.previous_location = -1
+        self.set_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self)
+        self.set_shortcut.activated.connect(self.backup)
         # self.model_view = QAbstractItemView()
         # self.model_view.setSelectionModel().selectionChanged.connect(self.tree_selection_changed)
-        self.ui.QTMainTree.clicked.connect(self.tree_selection_changed)
+        self.ui.QTMainTree.pressed.connect(self.tree_selection_changed)
         self.ui.QTMainTree.setModel(self.model)
-        with open('data.json', 'rb') as j_file:
+        with open(main_json_file, 'rb') as j_file:
             self.main_dic = load(j_file)
+        self.ui.QBSave.clicked.connect(self.save_json)
         self.setup_tree()
         self.ui_setup()
 
@@ -47,9 +64,24 @@ class MainWindow(QMainWindow):
                             if 'icon' in child_dic[child]:
                                 icon = QIcon(child_dic[child]['icon'])
                                 child_item.setIcon(icon)
+                            child_item.setFlags(
+                                Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                             base.appendRow(child_item)
                 self.model.appendRow(base)
 
+    def add_to_tree(self, new_val):
+        for i in range(self.model.rowCount()):
+            base = self.model.item(i)
+            if base.text() == new_val['סוג לקוח']:
+                child_item = QStandardItem(new_val['name'])
+                if 'icon' in new_val:
+                    icon = QIcon(new_val['icon'])
+                    child_item.setIcon(icon)
+                child_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                base.appendRow(child_item)
+                break
+
+    @Slot()
     def save_json(self):
         with codecs.open(main_json_file, 'wb', encoding='utf-8') as f_json:
             dump(self.main_dic, f_json)
@@ -57,10 +89,14 @@ class MainWindow(QMainWindow):
     @Slot(QModelIndex)
     def tree_selection_changed(self, item):
         t = self.ui.QTMainTree.selectedIndexes()[0]
-        if t.parent().data() is not None:
-            for child in self.main_dic[t.parent().data()]['children']:
+        parent = t.parent().data()
+        if parent is not None:
+            for child in self.main_dic[parent]['children']:
                 if t.data() in child:
                     print(t.data(), child[t.data()])
+                # else:  # Name changed
+                #     print(t.data(), t.column(), parent)
+                #     print(item.data())
 
     @Slot()
     def new_customer(self):
@@ -78,12 +114,26 @@ class MainWindow(QMainWindow):
     @Slot(dict)
     def get_dic(self, return_dic):
         if return_dic:
-            print(return_dic)
+            print(self.main_dic.keys())
+            return_dic["icon"] = ":/Icons/perm_data_setting.svg"
+            # output = {return_dic['name']: {}}
+            # for name, or_name in dic_translator.items():
+            #     output[return_dic['name']][name] = return_dic[or_name]
+            # self.main_dic[return_dic['סוג לקוח']]['children'].append(output)
+            self.previous_dict.append(self.copy())
+            self.previous_location += 1
+            self.main_dic[return_dic['סוג לקוח']]['children'].append({return_dic['name']: {name: return_dic[or_name] for or_name, name in dic_translator.items()}})
+
+            self.add_to_tree(return_dic)
         self.customer_widget = None
 
+    @Slot()
+    def backup(self):
+        print('backup')
 
 class CustomerWidget(QWidget):
     return_dic = Signal(dict)
+    is_there = Signal(str)
 
     def __init__(self, parent=None, new=True, main_dir=''):
         super(CustomerWidget, self).__init__(parent)
